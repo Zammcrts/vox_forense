@@ -1,0 +1,18 @@
+crewai>=1.0            # Python 3.10-3.13
+owlready2>=0.46        # requiere Java (JRE) en el PATH para el razonador HermiT
+fastapi>=0.110
+uvicorn[standard]>=0.29
+sqlalchemy>=2.0
+psycopg[binary]>=3.1
+python-multipart       # subida de audios
+httpx                  # cliente de pruebas de FastAPI
+librosa>=0.10
+praat-parselmouth>=0.4
+soundfile
+scipy
+numpy
+pandas
+scikit-learn
+matplotlib             # grafica de Shapley
+pytest
+# Ademas: ffmpeg instalado y en el PATH (lectura de mp3/m4a) y un servidor PostgreSQL (docker compose lo levanta)

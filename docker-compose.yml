@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16
+    environment: {POSTGRES_USER: vox, POSTGRES_PASSWORD: vox, POSTGRES_DB: vox}
+    volumes: ["pgdata:/var/lib/postgresql/data"]
+    healthcheck: {test: ["CMD-SHELL", "pg_isready -U vox -d vox"], interval: 5s, retries: 10}
+    ports: ["5432:5432"]
+  api:
+    build: .
+    environment:
+      DATABASE_URL: postgresql+psycopg://vox:vox@db:5432/vox
+      VOX_API_URL: http://localhost:8000      # las @tool de la Crew llaman a la API por HTTP (httpx)
+      VOX_API_KEY: ${VOX_API_KEY:-}
+      VOX_LLM: ${VOX_LLM:-ollama/llama3.1:8b}          # "simulado" para ensayar sin modelo
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}   # Ollama corre en tu maquina, fuera del contenedor
+    depends_on: {db: {condition: service_healthy}}
+    ports: ["8000:8000"]
+    extra_hosts: ["host.docker.internal:host-gateway"]
+    tmpfs: ["/tmp:size=512m"]          # RAM: aqui escribe owlready2 el archivo efimero que lee HermiT
+    read_only: false
+volumes: {pgdata: {}}
